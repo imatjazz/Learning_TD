@@ -4,9 +4,9 @@ class Register extends React.Component {
     constructor(props){
         super(props);
         this.state = {
+            name:'',
             email:'',
             password:'',
-            name:''
         }
     }
 
@@ -34,7 +34,7 @@ class Register extends React.Component {
                 .then(response =>  response.json())
                 .then(user => {
                     if(user === 'success'){
-                        this.loadUser(user)
+                        this.loadUser(user);
                         this.props.onChangeRoute('home');
                     }
                 })
