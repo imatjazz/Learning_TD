@@ -27,14 +27,15 @@ class Signin extends React.Component {
                 password: this.state.signInPassword
             })
         })
-            .then(response => response.json())
-            .then(user => {
-                console.log('data==== '+ user)
-                if(user.id){
-                    this.props.loadUser(user);
-                    this.props.onRouteChange('home');
-                }
-            })
+        .then(response => response.json())
+        .then(user => {
+            console.log('user ====> '+ user)
+            if(user[0].id){
+                this.props.loadUser(user);
+                console.log('at Signin.js line 35')
+                this.props.onRouteChange('home');
+            }
+        })
     }
 
     render(){
