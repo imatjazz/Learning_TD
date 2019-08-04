@@ -31,17 +31,17 @@ class Register extends React.Component {
                 email: this.state.email,
                 password: this.state.password
             })
-                .then(response =>  response.json())
-                .then(user => {
-                    if(user === 'success'){
-                        this.loadUser(user);
-                        this.props.onChangeRoute('home');
-                    }
-                })
-            }
-        )
+        })
+            .then(response =>  response.json())
+            .then(user => {
+                if(user.id){
+                    this.props.loadUser(user);
+                    this.props.onChangeRoute('home');
+                }
+            })
+            .catch(err => console.log(err))
     }
-
+        
     render(){
         return (
             <article className="br3 ba dark-gray b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
