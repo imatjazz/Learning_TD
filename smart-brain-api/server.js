@@ -57,8 +57,8 @@ app.post('/signin', (req,res)=>{
                 return db.select('*').from('users')
                     .where('email', '=', req.body.email)
                     .then(user => {
-                        console.log('at server.js line 60');
-                        res.json(user)
+                        console.log('at server.js line 60: user=> ', user);
+                        return res.json(user)
                     })
                     .catch(err => res.status(400).json('unable to get user'))
             } else {
