@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Particles from 'react-particles-js';
-import Clarifai from 'clarifai';
+// import Clarifai from 'clarifai';
 import './App.css';
 import Navigation from './components/Navigation/Navigation';
 import Signin from './components/Signin/Signin';
@@ -10,14 +10,12 @@ import Rank from './components/Rank/Rank';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Register from './components/Register/Register';
 
-const app = new Clarifai.App({
-  apiKey: '71e181476c814fa5a6f6d475f8841e62'
-});
+
 
 const particlesOptions = {
   particles: {
     number:{
-      value: 300,
+      value: 150,
       density:{
         enable: true,
         value_area: 800
@@ -65,12 +63,15 @@ class App extends Component {
     console.log('==================================================================');
     console.log(data);
     console.log('==================================================================');
+
     const clarifaiFace = data.outputs[0].data.regions[2].region_info.bounding_box;
     const image = document.getElementById('inputimage');
     const width = Number(image.width);
     const height = Number(image.height);
+
     console.log(width, height)
     console.log('clarifaiFace',clarifaiFace)
+
     return {
       leftCol: clarifaiFace.left_col*width,
       topRow: clarifaiFace.top_row*height,
@@ -92,13 +93,32 @@ class App extends Component {
 
   onButtonSubmit = ()=>{
     this.setState({imageUrl: this.state.input});
-    app.models
-      .predict(
-        Clarifai.FACE_DETECT_MODEL, 
-        this.state.input)
-      .then(response =>this.displayFaceBox(this.calculateFaceLocation(response)))
-        // console.log(response.outputs[0].data.regions[0].region_info.bounding_box);
-      .catch(err => console.log(err));
+    fetch('http://localhost/3000/imageurl', {
+      method: 'post',
+      headers: {'Content-type':'application/json'},
+      body: JSON.stringify({
+        input: this.state.input
+      })
+    })
+    .then(response => response.json())
+    .then(response => {
+      if(response){
+        fetch('http:/localhost:3000/image',{
+          method: 'post',
+          headers: {'Content-type':'application/json'},
+          body: JSON.stringify({
+            id: this.state.user.id
+          })
+        })
+        .then(response => response.json())
+        .then(count => {
+          this.setState(Object.assign(this.state.user, {entries: count}))
+        })
+        .catch(console.log)
+      }
+      this.displayFaceBox(this.calculateFaceLocation(response))
+    }) 
+    .catch(err => console.log(err));
   }
 
   onRouteChange = (route)=>{
