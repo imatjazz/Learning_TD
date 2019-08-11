@@ -27,7 +27,7 @@ class Signin extends React.Component {
                 password: this.state.signInPassword
             })
         })
-        .then(response => response.json())
+        .then(response => response.json()) //issue here...can't read response
         .then(user => {
             console.log('user ====> '+ user)
             if(user[0].id){
