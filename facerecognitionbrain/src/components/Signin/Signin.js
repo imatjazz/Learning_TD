@@ -29,10 +29,10 @@ class Signin extends React.Component {
         })
         .then(response => response.json()) //issue here...can't read response
         .then(user => {
-            console.log('user ====> '+ user)
+            // console.log('user ====> '+ user)
             if(user[0].id){
                 this.props.loadUser(user);
-                console.log('at Signin.js line 35')
+                console.log(this.state)
                 this.props.onRouteChange('home');
             }
         })

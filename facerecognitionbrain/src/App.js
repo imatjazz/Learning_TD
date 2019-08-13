@@ -104,7 +104,8 @@ class App extends Component {
     // .catch(err => console.log('!!!! ' + err))
     .then(response => {
       if(response){
-        console.log('>>>> '+ response);
+        console.log('>>>> '+ JSON.stringify(response));
+        console.log('this.state.user.id :', this.state.user);
         fetch('http://localhost:3000/image', {
           method: 'put',
           headers: {'Content-Type':'application/json'},
@@ -112,11 +113,10 @@ class App extends Component {
             id: this.state.user.id
           })
         })
-        .catch(err => console.log('found error here 1 ' + err))
         .then(response => response.json())
-        .catch(err => console.log('found error here 2 ' + err))
+        // .catch(err => console.log('found error here 2 ' + err))
         .then(count => {
-          // console.log('count: ' + count);
+          console.log('count: ' + count);
           this.setState(Object.assign(this.state.user, {entries: count}));
         })
         .catch(err => console.log('found error here 3 ' + err))

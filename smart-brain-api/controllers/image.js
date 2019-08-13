@@ -17,14 +17,16 @@ const handleApiCall = (req, res) => {
 }
 
 const handleImage = (req, res, db)=>{
+    console.log('===req.body===: ',JSON.stringify(req.body))
     const { id } = req.body;
+    console.log('id: ',id)
     db('users').where('id', '=', id)
         .increment('entries',1)
         .returning('entries')
         .then(entries => {
            res.json(entries[0]);
         })
-        .catch(err => res.sendStatus(400).json('unable to get entries'));
+        .catch(err => res.status(400).json('unable to get entries'));
 }
 
 
