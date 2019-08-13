@@ -60,17 +60,17 @@ class App extends Component {
   // }
 
   calculateFaceLocation = (data) =>{
-    console.log('==================================================================');
-    console.log(data);
-    console.log('==================================================================');
+    // console.log('==================================================================');
+    // console.log(data);
+    // console.log('==================================================================');
 
-    const clarifaiFace = data.outputs[0].data.regions[2].region_info.bounding_box;
+    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
     const image = document.getElementById('inputimage');
     const width = Number(image.width);
     const height = Number(image.height);
 
-    console.log(width, height)
-    console.log('clarifaiFace',clarifaiFace)
+    // console.log(width, height)
+    // console.log('clarifaiFace',clarifaiFace)
 
     return {
       leftCol: clarifaiFace.left_col*width,
@@ -93,32 +93,38 @@ class App extends Component {
 
   onButtonSubmit = ()=>{
     this.setState({imageUrl: this.state.input});
-    fetch('http://localhost/3000/imageurl', {
+    fetch('http://localhost:3000/imageurl', {
       method: 'post',
-      headers: {'Content-type':'application/json'},
+      headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
         input: this.state.input
       })
     })
     .then(response => response.json())
+    // .catch(err => console.log('!!!! ' + err))
     .then(response => {
       if(response){
-        fetch('http:/localhost:3000/image',{
-          method: 'post',
-          headers: {'Content-type':'application/json'},
+        console.log('>>>> '+ response);
+        fetch('http://localhost:3000/image', {
+          method: 'put',
+          headers: {'Content-Type':'application/json'},
           body: JSON.stringify({
             id: this.state.user.id
           })
         })
+        .catch(err => console.log('found error here 1 ' + err))
         .then(response => response.json())
+        .catch(err => console.log('found error here 2 ' + err))
         .then(count => {
-          this.setState(Object.assign(this.state.user, {entries: count}))
+          // console.log('count: ' + count);
+          this.setState(Object.assign(this.state.user, {entries: count}));
         })
-        .catch(console.log)
+        .catch(err => console.log('found error here 3 ' + err))
       }
-      this.displayFaceBox(this.calculateFaceLocation(response))
+      // console.log(response);
+      this.displayFaceBox(this.calculateFaceLocation(response));
     }) 
-    .catch(err => console.log(err));
+    .catch(err => console.log('ui errr ' + err));
   }
 
   onRouteChange = (route)=>{
@@ -154,7 +160,9 @@ class App extends Component {
         {route=== 'home'
           ? <div>
               <Logo />
-              <Rank />
+              <Rank 
+                name={this.state.user.name} 
+                entries={this.state.user.entries}/>
               <ImageLinkForm 
                 onInputChange={this.onInputChange}
                 onButtonSubmit = {this.onButtonSubmit}/>
