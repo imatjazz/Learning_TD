@@ -111,10 +111,11 @@ class App extends Component {
           headers: {'Content-Type':'application/json'},
           body: JSON.stringify({
             id: this.state.user.id
+            // id: '7'
           })
         })
         .then(response => response.json())
-        // .catch(err => console.log('found error here 2 ' + err))
+        .catch(err => console.log('found error here 2 ' + err))
         .then(count => {
           console.log('count: ' + count);
           this.setState(Object.assign(this.state.user, {entries: count}));
@@ -126,6 +127,36 @@ class App extends Component {
     }) 
     .catch(err => console.log('ui errr ' + err));
   }
+
+  // onButtonSubmit = () => {
+  //   this.setState({imageUrl: this.state.input});
+  //     fetch('http://localhost:3000/imageurl', {
+  //       method: 'post',
+  //       headers: {'Content-Type': 'application/json'},
+  //       body: JSON.stringify({
+  //         input: this.state.input
+  //       })
+  //     })
+  //     .then(response => response.json())
+  //     .then(response => {
+  //       if (response) {
+  //         fetch('http://localhost:3000/image', {
+  //           method: 'put',
+  //           headers: {'Content-Type': 'application/json'},
+  //           body: JSON.stringify({
+  //             id: this.state.user.id
+  //           })
+  //         })
+  //           .then(response => response.json())
+  //           .then(count => {
+  //             this.setState(Object.assign(this.state.user, { entries: count}))
+  //           })
+  //           .catch(console.log)
+  //       }
+  //       this.displayFaceBox(this.calculateFaceLocation(response))
+  //     })
+  //     .catch(err => console.log(err));
+  // }
 
   onRouteChange = (route)=>{
     if (route === 'signout'){
@@ -139,12 +170,12 @@ class App extends Component {
   loadUser = (data)=>{
     this.setState({
       user:{
-        // id: data.id,
+        id: data.id,
         name: data.name,
         email: data.email,
         password: data.password,
-        // entries: data.entries,
-        // joined: data.joined
+        entries: data.entries,
+        joined: data.joined
       }
     })
   }
@@ -172,7 +203,7 @@ class App extends Component {
             </div>
           : (
               route === 'signin'
-                ? <Signin onRouteChange={this.onRouteChange} loadUser={this.loadUser} />
+                ? <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange}  />
                 : <Register onRouteChange={this.onRouteChange} loadUser={this.loadUser} />
             )
         }
